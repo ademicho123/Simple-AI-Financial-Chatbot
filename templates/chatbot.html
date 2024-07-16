@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Financial Data Chatbot</title>
+    <style>
+        body { font-family: sans-serif; }
+        #chatbox { width: 400px; height: 300px; border: 1px solid #ccc; overflow-y: scroll; padding: 10px; }
+        .message { margin-bottom: 10px; }
+        .user { text-align: right; }
+        .bot { text-align: left; }
+    </style>
+</head>
+<body>
+    <h1>Financial Data Chatbot</h1>
+    <div id="chatbox"></div>
+    <input type="text" id="user_input" placeholder="Ask a question">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        const chatbox = document.getElementById('chatbox');
+        const userInput = document.getElementById('user_input');
+
+        function displayMessage(sender, message) {
+            const msgElement = document.createElement('div');
+            msgElement.classList.add('message', sender);
+            msgElement.textContent = message;
+            chatbox.appendChild(msgElement);
+            chatbox.scrollTop = chatbox.scrollHeight; // Scroll to the bottom
+        }
+
+        function sendMessage() {
+            const query = userInput.value;
+            displayMessage('user', query);
+            userInput.value = ''; // Clear the input field
+
+            fetch(`/chatbot?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    displayMessage('bot', data);
+                });
+        }
+    </script>
+</body>
+</html>
